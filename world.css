@@ -1,0 +1,44 @@
+/* World styling: islands, workshop, plots, card collection */
+.stage { position: relative; height: min(60vh, 420px); border-radius: 28px; overflow: hidden; box-shadow: inset 0 0 40px #0005, 0 8px 24px #0005; border: 2px solid #fff4; }
+.isl { width: 100%; height: 100%; animation: float 5s ease-in-out infinite; position: relative; }
+@keyframes float { 50% { transform: translateY(-9px); } }
+.sun { position: absolute; right: 8%; top: 7%; width: 56px; height: 56px; border-radius: 50%; background: radial-gradient(#fffbd0, #ffd86b 60%, transparent 72%); box-shadow: 0 0 40px #ffe27a; }
+.fly { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #fff6a8; box-shadow: 0 0 10px #fff6a8; animation: fl 6s ease-in-out infinite; }
+@keyframes fl { 50% { transform: translate(16px, -30px); opacity: .2; } }
+.cloud { animation: drift 8s ease-in-out infinite alternate; } .far { animation: float 7s ease-in-out infinite; } .f2 { animation-delay: -3s; }
+@keyframes drift { to { transform: translateX(14px); } }
+.sway { transform-box: fill-box; transform-origin: 50% 100%; animation: sway 3.4s ease-in-out infinite; }
+@keyframes sway { 50% { transform: rotate(2.5deg); } }
+.wf { animation: wf .8s linear infinite; } @keyframes wf { to { stroke-dashoffset: -18; } }
+.switch { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 10px; } .switch h2 { margin: 0; font-size: 1.05rem; flex: 1; }
+.eico { width: 30px; height: 30px; }
+/* Alchemy workshop */
+.scene-wrap { position: relative; max-width: 360px; margin: 0 auto; } .ascn { width: 100%; display: block; filter: drop-shadow(0 8px 18px #0006); }
+#slots { position: absolute; left: 0; right: 0; top: 39%; } .slot { width: 62px; height: 62px; border: 2px solid #fff8; background: radial-gradient(#ffffff55, #ffffff11); box-shadow: 0 0 18px #ff9cf2aa; animation: bob 3s ease-in-out infinite; }
+.slot:nth-child(2) { animation-delay: -1s; margin-top: -14px; } .slot:nth-child(3) { animation-delay: -2s; }
+.slot .btl { width: 70%; height: 90%; }
+.btl { height: 64px; filter: drop-shadow(0 0 6px #fff6); } .ing { padding: 8px 2px; } .ing:active .btl { transform: scale(1.15); }
+.bub, .bb { animation: rise 2.4s ease-in infinite; } .b2 { animation-delay: -.8s; } .b3 { animation-delay: -1.5s; } .b4 { animation-delay: -2s; }
+@keyframes rise { 0% { transform: translateY(0); opacity: 0; } 30% { opacity: .9; } 100% { transform: translateY(-14px); opacity: 0; } }
+.fire path, .flame { transform-box: fill-box; transform-origin: 50% 100%; animation: flick .45s ease-in-out infinite alternate; } .flame.f2 { animation-delay: -.2s; }
+@keyframes flick { to { transform: scaleY(1.2) skewX(4deg); } }
+.mixing .ascn { animation: shake .9s; } @keyframes shake { 20% { transform: translateX(-4px) rotate(-1deg); } 40% { transform: translateX(4px) rotate(1deg); } 60% { transform: translateX(-3px); } 80% { transform: translateX(3px); } }
+.rc { display: inline-flex; align-items: center; gap: 4px; } .dot { width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid #fff; } .sd { width: 22px; height: 24px; display: inline-block; } .sd svg { width: 100%; height: 100%; }
+/* Farm */
+.plot { background: radial-gradient(#7a5ad8, #3a2386); padding: 4px 4px 6px; border-radius: 24px; } .plot svg.pl { width: 92%; height: 76%; } .plot .plus { font-size: 2.4rem; opacity: .6; }
+.plot.fruit svg .glowf { animation: pulse 1.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+/* Collection (tall cards like the reference) */
+#page-collection { max-width: 100%; background: linear-gradient(#dff0ff, #f8e8ff); border-radius: 26px; padding: 6px 0 14px; color: #4a3f5c; }
+.cards { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 14px 12px 16px; }
+.tcard { flex: 0 0 168px; height: 336px; scroll-snap-align: center; border-radius: 22px; position: relative; overflow: hidden; background: linear-gradient(155deg, #fff 42%, var(--c2)); color: #4a3f5c; box-shadow: 0 8px 20px #4a3f5c44; display: flex; flex-direction: column; align-items: center; padding: 10px; border: 3px solid #fff; }
+.tcard .no { position: absolute; left: 12px; top: 10px; font-size: .75rem; font-weight: 800; opacity: .55; } .tcard .crowns { position: absolute; right: 10px; top: 8px; color: #c08cff; font-size: .8rem; }
+.tcard .wm { position: absolute; left: -26px; top: 150px; transform: rotate(-35deg); font-size: 2.1rem; font-weight: 900; letter-spacing: 4px; color: var(--c); opacity: .2; }
+.tcard .big { width: 140px; height: 140px; margin-top: 22px; position: relative; } .tcard .big svg, .tcard .mini svg { width: 100%; height: 100%; }
+.tcard .foot { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-top: 8px; position: relative; } .tcard .mini { width: 50px; height: 50px; }
+.tcard h4 { margin: 4px 0 2px; font-size: 1rem; position: relative; } .tcard p { margin: 0; font-size: .68rem; line-height: 1.25; text-align: center; position: relative; opacity: .85; }
+.tcard .stg { margin-top: auto; font-size: .68rem; font-weight: 800; background: var(--c); color: #fff; border-radius: 99px; padding: 2px 12px; position: relative; }
+.tcard.lk .big svg, .tcard.lk .mini svg { filter: brightness(0) opacity(.28); } .tcard.lk { opacity: .8; }
+.prog { display: flex; align-items: center; gap: 12px; padding: 4px 16px 6px; } .lv { width: 52px; height: 52px; flex: none; border-radius: 50%; display: grid; place-items: center; font-weight: 900; color: #fff; background: linear-gradient(#a98bff, #7b5cff); border: 3px solid #fff; box-shadow: 0 3px 10px #7b5cff88; }
+.track { position: relative; flex: 1; height: 10px; border-radius: 9px; background: #fff; box-shadow: inset 0 1px 3px #0003; margin-right: 10px; } .track i { display: block; height: 100%; border-radius: 9px; background: linear-gradient(90deg, #7ff0d0, #a98bff, #ff8fd1); transition: width .8s; }
+.ms { position: absolute; top: -9px; width: 26px; height: 26px; margin-left: -13px; transform: rotate(45deg); border-radius: 6px; background: #d4c8f0; border: 2px solid #fff; display: grid; place-items: center; } .ms.on { background: linear-gradient(#ffe27a, #ff9ed2); box-shadow: 0 0 10px #ffd43b; } .ms em { transform: rotate(-45deg); font-style: normal; font-size: .62rem; font-weight: 800; color: #4a3f5c; }
+.pt { position: fixed; left: 50%; top: 55%; width: 10px; height: 10px; border-radius: 50%; pointer-events: none; z-index: 30; animation: burst 1.1s ease-out forwards; } @keyframes burst { to { transform: translate(var(--dx), var(--dy)) scale(.2); opacity: 0; } }

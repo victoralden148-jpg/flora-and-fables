@@ -1,38 +1,60 @@
-/* Procedural chibi creature art (SVG): 24 unique custom characters, baby + adult forms */
+/* Creature art v2: 24 unique cel-shaded chibi monsters (SVG). Body, ears, pattern, tail, mouth and element crest all vary per id. */
 (function () {
   'use strict';
-  // [main, light, dark, accent]
-  const P = { Fire: ['#ff8a5c', '#ffe0b8', '#c9482b', '#ffd43b'], Water: ['#4cc9f0', '#d2f6ff', '#2b7fc9', '#7b5cff'], Nature: ['#6fdc8c', '#e4ffd0', '#2f9e5a', '#ff8fc4'], Ice: ['#a8e6ff', '#f2fcff', '#5aa8e0', '#7b8cff'], Light: ['#ffe27a', '#fffbe0', '#f0a830', '#ff8fc4'], Shadow: ['#9b7bff', '#e6dcff', '#5a3cb8', '#ff6fd1'] };
-  const MARK = { Fire: 'M0-7Q8 0 0 6Q-8 0 0-7Z', Water: 'M0-7C6 1 6 6 0 6C-6 6-6 1 0-7Z', Nature: 'M-6 4Q-6-6 6-6Q6 4-6 4Z', Ice: 'M0-7L2-2 7 0 2 2 0 7-2 2-7 0-2-2Z', Light: 'M0-6A6 6 0 1 0 .1-6Z', Shadow: 'M3-7A7 7 0 1 0 3 7A5 5 0 1 1 3-7Z' };
+  const P = { Fire: ['#ff8a5c', '#ffe3c0', '#b83a22', '#ffd43b'], Water: ['#4cc9f0', '#d6f7ff', '#1f6fb8', '#8b6bff'], Nature: ['#6fdc8c', '#e8ffd6', '#278a4f', '#ff8fc4'], Ice: ['#a8e6ff', '#f6fdff', '#4a96d6', '#7b8cff'], Light: ['#ffe27a', '#fffbe6', '#d98a1c', '#ff8fc4'], Shadow: ['#a58bff', '#ece4ff', '#4b2fa8', '#ff6fd1'] };
+  window.PAL = P;
+  // [path, eyeY, eyeSpacing, headTopY]
+  const BODY = [
+    ['M50 26C74 26 82 50 80 66C78 84 22 84 20 66C18 50 26 26 50 26Z', 54, 14, 26],
+    ['M50 16C70 16 76 46 76 66C76 86 24 86 24 66C24 46 30 16 50 16Z', 46, 13, 16],
+    ['M50 34C82 34 92 56 88 70C84 84 16 84 12 70C8 56 18 34 50 34Z', 56, 17, 34],
+    ['M50 22C66 22 74 36 76 52C80 70 86 84 50 86C14 84 20 70 24 52C26 36 34 22 50 22Z', 48, 14, 22],
+    ['M30 30H70Q84 30 84 46V66Q84 84 66 84H34Q16 84 16 66V46Q16 30 30 30Z', 52, 15, 30],
+    ['M50 16A24 24 0 1 1 49.9 16ZM50 52C80 50 82 88 50 90C18 88 20 50 50 52Z', 38, 13, 16]
+  ];
   let n = 0;
   window.creature = function (id, adult) {
-    const c = CHARACTERS[id], [m, l, d, a] = P[c.element], u = 'c' + (n++);
-    const e = (id * 3 + c.rarity) % 5, k = adult ? 1.12 : 1, y = adult ? 52 : 58, rx = 30 * k, ry = 27 * k;
-    const ears = [
-      `<circle cx="28" cy="${y - 24}" r="11" fill="${m}"/><circle cx="28" cy="${y - 24}" r="5.5" fill="${a}" opacity=".6"/>`,
-      `<path d="M16 ${y - 14}L24 ${y - 48}L44 ${y - 26}Z" fill="${m}"/><path d="M23 ${y - 22}L26 ${y - 38}L36 ${y - 27}Z" fill="${a}" opacity=".6"/>`,
-      `<ellipse cx="32" cy="${y - 38}" rx="8" ry="20" fill="${m}" transform="rotate(-10 32 ${y - 38})"/><ellipse cx="32" cy="${y - 38}" rx="4" ry="14" fill="${a}" opacity=".55" transform="rotate(-10 32 ${y - 38})"/>`,
-      `<path d="M34 ${y - 24}Q22 ${y - 48} 40 ${y - 52}Q38 ${y - 38} 46 ${y - 28}Z" fill="${a}"/>`,
-      `<path d="M38 ${y - 24}Q30 ${y - 44} 20 ${y - 46}" stroke="${d}" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="20" cy="${y - 46}" r="5" fill="${a}"/>`
-    ][e];
-    const wing = adult ? `<path d="M26 ${y}Q-6 ${y - 30} 4 ${y + 14}Q14 ${y + 10} 28 ${y + 14}Z" fill="${l}" stroke="${m}" stroke-width="2" opacity=".92" class="wing"/>` : '';
+    const c = CHARACTERS[id], [m, l, d, a] = P[c.element], u = 'c' + (n++), [bp, ey, es, ty] = BODY[id % 6];
+    const ek = (id * 5 + id % 3) % 6, pt = (id * 3) % 4, mo = id % 3, tk = id % 3, my = ey + 14;
     const both = s => `${s}<g transform="translate(100 0) scale(-1 1)">${s}</g>`;
-    const eye = x => `<g class="blink"><ellipse cx="${x}" cy="${y - 3}" rx="7.5" ry="9" fill="#2a1b4d"/><ellipse cx="${x}" cy="${y - 1}" rx="5" ry="6" fill="${a}" opacity=".85"/><circle cx="${x - 2.5}" cy="${y - 6}" r="3.2" fill="#fff"/><circle cx="${x + 2.5}" cy="${y + 2}" r="1.6" fill="#fff"/></g>`;
-    const aura = (adult || c.rarity === 5) ? `<circle class="aura" cx="50" cy="${y}" r="47" fill="url(#${u}a)"/>` : '';
-    const spark = adult ? `<path class="tw" d="M12 20l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="${a}"/><path class="tw t2" d="M86 10l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#fff"/>` : '';
-    return `<svg viewBox="-8 -4 116 108" class="cr" style="filter:hue-rotate(${(id % 4 - 1.5) * 12}deg)"><defs>
-<radialGradient id="${u}b" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="${l}"/><stop offset=".45" stop-color="${m}"/><stop offset="1" stop-color="${d}"/></radialGradient>
-<radialGradient id="${u}a"><stop offset="0" stop-color="#fff3a0" stop-opacity=".75"/><stop offset="1" stop-color="#fff3a0" stop-opacity="0"/></radialGradient></defs>
-<ellipse cx="50" cy="${y + ry + 3}" rx="26" ry="4" fill="#000" opacity=".25"/>${aura}
-<path d="M${50 + rx - 4} ${y + 16}Q98 ${y + 14} 90 ${y - 8}" stroke="${m}" stroke-width="9" fill="none" stroke-linecap="round"/><circle cx="90" cy="${y - 8}" r="5.5" fill="${a}"/>
-${both(wing)}${both(ears)}
-<ellipse cx="37" cy="${y + ry - 2}" rx="9" ry="5.5" fill="${d}"/><ellipse cx="63" cy="${y + ry - 2}" rx="9" ry="5.5" fill="${d}"/>
-<ellipse cx="50" cy="${y}" rx="${rx}" ry="${ry}" fill="url(#${u}b)"/>
-<ellipse cx="50" cy="${y + 9}" rx="${rx * .52}" ry="${ry * .5}" fill="${l}" opacity=".8"/>
-<circle cx="28" cy="${y + 5}" r="4.5" fill="#ff7fa8" opacity=".5"/><circle cx="72" cy="${y + 5}" r="4.5" fill="#ff7fa8" opacity=".5"/>
-${eye(37)}${eye(63)}
-<path d="M45 ${y + 8}Q50 ${y + 14} 55 ${y + 8}" stroke="#2a1b4d" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-<path transform="translate(50 ${y - ry + 8})" d="${MARK[c.element]}" fill="${a}" stroke="#fff" stroke-width="1"/>
-<ellipse cx="38" cy="${y - ry + 10}" rx="11" ry="5" fill="#fff" opacity=".5" transform="rotate(-25 38 ${y - ry + 10})"/>${spark}</svg>`;
+    const ears = [
+      `<circle cx="30" cy="${ty + 6}" r="11" fill="${m}"/><circle cx="30" cy="${ty + 6}" r="5" fill="${a}" opacity=".55" stroke="none"/>`,
+      `<path d="M20 ${ty + 12}L26 ${ty - 20}L46 ${ty + 6}Z" fill="${m}"/><path d="M26 ${ty + 4}L28 ${ty - 10}L38 ${ty + 2}Z" fill="${a}" opacity=".6" stroke="none"/>`,
+      `<ellipse cx="34" cy="${ty - 10}" rx="8" ry="20" transform="rotate(-12 34 ${ty - 10})" fill="${m}"/><ellipse cx="34" cy="${ty - 8}" rx="4" ry="14" transform="rotate(-12 34 ${ty - 8})" fill="${a}" opacity=".55" stroke="none"/>`,
+      `<path d="M34 ${ty + 8}Q24 ${ty - 18} 42 ${ty - 22}Q38 ${ty - 8} 48 ${ty + 2}Z" fill="${l}"/>`,
+      `<path d="M40 ${ty + 4}Q30 ${ty - 14} 20 ${ty - 18}" stroke="${d}" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="20" cy="${ty - 18}" r="5.5" fill="${a}"/>`,
+      `<path d="M40 ${ty + 4}Q20 ${ty - 10} 28 ${ty - 26}Q46 ${ty - 14} 40 ${ty + 4}Z" fill="#6fdc8c"/>`][ek];
+    const crest = {
+      Fire: `<path d="M44 ${ty + 2}Q40 ${ty - 14} 50 ${ty - 20}Q60 ${ty - 14} 56 ${ty + 2}Z" fill="#ffb347"/><path d="M47 ${ty + 2}Q47 ${ty - 8} 50 ${ty - 11}Q53 ${ty - 8} 53 ${ty + 2}Z" fill="#fff2a0" stroke="none"/>`,
+      Water: `<path d="M43 ${ty + 4}Q50 ${ty - 18} 57 ${ty + 4}Z" fill="${l}"/>`,
+      Nature: `<path d="M50 ${ty + 4}Q44 ${ty - 14} 32 ${ty - 12}Q38 ${ty} 50 ${ty + 4}ZM50 ${ty + 4}Q56 ${ty - 14} 68 ${ty - 12}Q62 ${ty} 50 ${ty + 4}Z" fill="#7be07f"/>`,
+      Ice: `<path d="M42 ${ty + 4}L46 ${ty - 14}L50 ${ty + 2}L55 ${ty - 20}L59 ${ty + 4}Z" fill="#dff6ff"/>`,
+      Light: `<ellipse class="aura" cx="50" cy="${ty - 8}" rx="15" ry="4.5" fill="none" stroke="#ffe27a" stroke-width="3"/>`,
+      Shadow: `<path d="M42 ${ty + 4}Q50 ${ty - 14} 58 ${ty + 4}Q50 ${ty - 2} 42 ${ty + 4}Z" fill="#2a1b4d"/><circle cx="50" cy="${ty - 4}" r="2" fill="#ff6fd1" stroke="none"/>`
+    }[c.element];
+    const tc = { Fire: '#ff9a3c', Water: l, Nature: '#6fdc8c', Ice: '#cdefff', Light: a, Shadow: d }[c.element];
+    const tail = [`<path d="M80 74Q108 80 100 44Q92 62 82 62Z" fill="${tc}"/>`, `<path d="M80 72Q98 72 96 58" stroke="${m}" stroke-width="8" fill="none" stroke-linecap="round"/><circle cx="96" cy="56" r="8" fill="${tc}"/>`, `<path d="M80 74Q104 84 100 66Q96 54 88 62" stroke="${tc}" stroke-width="7" fill="none" stroke-linecap="round"/>`][tk];
+    const wings = adult ? both(`<path class="wing" d="M24 ${ey + 4}Q-12 ${ey - 32} 2 ${ey + 22}Q14 ${ey + 18} 26 ${ey + 22}Z" fill="${a}" opacity=".92"/>`) : '';
+    const arms = both(`<ellipse cx="19" cy="${ey + 22}" rx="6" ry="9" transform="rotate(25 19 ${ey + 22})" fill="${m}"/>`);
+    const eye = x => `<g class="blink"><ellipse cx="${x}" cy="${ey}" rx="7.5" ry="9.5" fill="#2a1b4d" stroke="none"/><ellipse cx="${x}" cy="${ey + 2}" rx="5.5" ry="6.5" fill="url(#${u}e)" stroke="none"/><circle cx="${x - 2.6}" cy="${ey - 3.5}" r="3.3" fill="#fff" stroke="none"/><circle cx="${x + 2.4}" cy="${ey + 3}" r="1.5" fill="#fff" stroke="none"/><path d="M${x - 8} ${ey - 6}Q${x} ${ey - 13} ${x + 8} ${ey - 6}" stroke="#2a1b4d" stroke-width="2" fill="none" stroke-linecap="round"/></g>`;
+    const mouth = [`<path d="M44 ${my}Q50 ${my + 6} 56 ${my}" stroke="#2a1b4d" stroke-width="2.2" fill="none" stroke-linecap="round"/>`, `<path d="M43 ${my - 1}Q50 ${my + 10} 57 ${my - 1}Z" fill="#7a1f4a" stroke="none"/><ellipse cx="50" cy="${my + 5}" rx="3.5" ry="2" fill="#ff7fa8" stroke="none"/>`, `<path d="M43 ${my}Q46.5 ${my + 5} 50 ${my}Q53.5 ${my + 5} 57 ${my}" stroke="#2a1b4d" stroke-width="2.2" fill="none" stroke-linecap="round"/>`][mo];
+    const pat = ['', `<g fill="${d}" opacity=".22" stroke="none"><circle cx="36" cy="72" r="5"/><circle cx="64" cy="76" r="4"/><circle cx="52" cy="64" r="3"/></g>`, `<path d="M20 60L50 90M34 56L70 90M52 54L84 84" stroke="${d}" stroke-width="5" opacity=".2"/>`, `<path d="M50 70l3 6h6l-5 4 2 6-6-4-6 4 2-6-5-4h6z" fill="${a}" stroke="none"/>`][pt];
+    const aura = (adult || c.rarity === 5) ? `<circle class="aura" cx="50" cy="56" r="52" fill="url(#${u}a)"/>` : '';
+    const spark = adult ? `<path class="tw" d="M8 16l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="${a}" stroke="none"/><path class="tw t2" d="M90 8l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#fff" stroke="none"/>` : '';
+    const sc = adult ? 1.1 : 1;
+    return `<svg viewBox="-14 -8 128 114" class="cr"><defs>
+<radialGradient id="${u}b" cx=".35" cy=".3" r=".85"><stop offset="0" stop-color="${l}"/><stop offset=".5" stop-color="${m}"/><stop offset="1" stop-color="${d}"/></radialGradient>
+<linearGradient id="${u}e" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${d}"/></linearGradient>
+<radialGradient id="${u}a"><stop offset="0" stop-color="#fff3a0" stop-opacity=".7"/><stop offset="1" stop-color="#fff3a0" stop-opacity="0"/></radialGradient>
+<clipPath id="${u}k"><path d="${bp}"/></clipPath></defs>
+<ellipse cx="50" cy="95" rx="28" ry="4.5" fill="#000" opacity=".25"/>${aura}
+<g transform="translate(50 56) scale(${sc}) translate(-50 -56)" stroke="${d}" stroke-width="2.4" stroke-linejoin="round">
+${tail}${wings}${both(ears)}
+<ellipse cx="36" cy="89" rx="10" ry="6" fill="${m}"/><ellipse cx="64" cy="89" rx="10" ry="6" fill="${m}"/>${arms}
+<path d="${bp}" fill="url(#${u}b)"/>
+<g clip-path="url(#${u}k)" stroke="none"><ellipse cx="50" cy="100" rx="46" ry="24" fill="${d}" opacity=".3"/><ellipse cx="50" cy="76" rx="16" ry="11" fill="${l}" opacity=".85"/>${pat}</g>
+<path d="M27 52Q30 36 46 31" stroke="#fff" stroke-width="3.5" opacity=".6" fill="none" stroke-linecap="round"/>
+<circle cx="${50 - es - 12}" cy="${ey + 9}" r="4.5" fill="#ff7fa8" opacity=".55" stroke="none"/><circle cx="${50 + es + 12}" cy="${ey + 9}" r="4.5" fill="#ff7fa8" opacity=".55" stroke="none"/>
+${crest}${eye(50 - es)}${eye(50 + es)}${mouth}</g>${spark}</svg>`;
   };
 })();

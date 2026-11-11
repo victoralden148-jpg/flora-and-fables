@@ -7,6 +7,7 @@
   <title>Flora &amp; Fables</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="theme.css">
+  <link rel="stylesheet" href="world.css">
 </head>
 <body>
   <div class="stars"></div>
@@ -16,19 +17,18 @@
   </header>
   <main>
     <section id="page-home" class="page active">
-      <div class="hero"><div class="hero-glow"></div><div id="hero-art" class="hero-art"></div></div>
-      <h2 id="hero-name" class="center"></h2>
+      <div id="stage" class="stage"></div>
+      <div class="switch"><button id="prev" class="icon" aria-label="Previous">‹</button><h2 id="hero-name" class="center"></h2><button id="next" class="icon" aria-label="Next">›</button></div>
       <div class="bar"><i id="bar-fill"></i></div>
       <p id="home-msg" class="msg"></p>
-      <div class="row"><button class="btn" data-go="alchemy">🧪 Brew</button><button class="btn" data-go="farm">🌱 Farm</button></div>
-      <div class="row"><button class="btn ghost" data-go="collection">📖 Cards</button></div>
+      <div class="row"><button class="btn" data-go="alchemy">Workshop</button><button class="btn" data-go="farm">Farm</button></div>
+      <div id="hero-art" hidden></div>
     </section>
     <section id="page-alchemy" class="page">
-      <div class="cauldron" aria-hidden="true">🫕</div>
-      <div id="slots" class="slots"></div>
+      <div class="scene-wrap"><div id="scene"></div><div id="slots" class="slots"></div></div>
       <div id="ingredients" class="ingredients"></div>
       <div class="row"><button id="btn-clear" class="btn ghost">Clear</button><button id="btn-mix" class="btn">Mix</button></div>
-      <p id="alchemy-msg" class="msg">Pick 3 ingredients, then mix.</p>
+      <p id="alchemy-msg" class="msg">Pick 3 potions, then mix.</p>
       <h2>Recipe book</h2><div id="recipes" class="recipes"></div>
     </section>
     <section id="page-farm" class="page">
@@ -36,13 +36,13 @@
       <div id="plots" class="plots"></div>
       <h2>Seed bag</h2><div id="seedbag" class="recipes"></div>
     </section>
-    <section id="page-collection" class="page"><div id="cards" class="cards"></div></section>
+    <section id="page-collection" class="page"><div id="cards" class="cards"></div><div id="col-prog" class="prog"></div></section>
   </main>
   <nav class="nav">
-    <button data-page="home" class="active">🏠<span>Home</span></button>
-    <button data-page="alchemy">🧪<span>Alchemy</span></button>
-    <button data-page="farm">🌱<span>Farm</span></button>
-    <button data-page="collection">📖<span>Cards</span></button>
+    <button data-page="home" class="active"><span>Home</span></button>
+    <button data-page="alchemy"><span>Workshop</span></button>
+    <button data-page="farm"><span>Farm</span></button>
+    <button data-page="collection"><span>Cards</span></button>
   </nav>
   <div id="modal" class="modal hidden"><div id="modal-body" class="modal-body"></div></div>
   <div id="toast" class="toast"></div>
@@ -51,7 +51,9 @@
   <script src="cloud.js"></script>
   <script src="audio.js"></script>
   <script src="art.js"></script>
+  <script src="art2.js"></script>
   <script src="app.js"></script>
+  <script src="ui.js"></script>
   <script>document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => document.querySelector('.nav [data-page="' + b.dataset.go + '"]').click()));</script>
 </body>
 </html>
