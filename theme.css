@@ -1,0 +1,45 @@
+/* Cosmic candy theme (loaded after style.css; overrides its variables) */
+:root { --paper: #2e1b6b; --ink: #fff; --lav-d: #a98bff; --mint-d: #3fd6b0; --peach-d: #ff6fa8; }
+body { color: #fff; background: radial-gradient(circle at 15% 8%, #7b3fe4 0, transparent 50%), radial-gradient(circle at 88% 92%, #ff6fb5 0, transparent 45%), linear-gradient(#1d1250, #3a1c7a); background-attachment: fixed; }
+.stars { position: fixed; inset: 0; pointer-events: none; background-image: radial-gradient(2px 2px at 20px 30px, #fff, transparent), radial-gradient(1.5px 1.5px at 90px 80px, #ffe9a8, transparent), radial-gradient(2px 2px at 160px 20px, #fff, transparent), radial-gradient(1.5px 1.5px at 130px 100px, #bff, transparent); background-size: 200px 120px; animation: tw 4s ease-in-out infinite alternate; }
+@keyframes tw { from { opacity: .35; } to { opacity: 1; } }
+header, main, .nav { position: relative; z-index: 1; } .nav { position: fixed; }
+h1 { font-weight: 900; font-size: 1.5rem; background: linear-gradient(90deg, #ffe27a, #ff8fd1, #7ff0d0); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hud { display: flex; gap: 8px; align-items: center; }
+.icon { border: 1px solid #fff4; background: #ffffff22; color: #fff; border-radius: 50%; width: 38px; height: 38px; font-size: 1.1rem; backdrop-filter: blur(8px); }
+.pill { background: #ffffff22; border: 1px solid #fff4; box-shadow: none; backdrop-filter: blur(8px); }
+.center { text-align: center; }
+.btn { background: linear-gradient(#ff8fc4, #ff5fa0); box-shadow: 0 4px 0 #b3367a, 0 0 16px #ff6fa866; }
+.btn.ghost { background: #ffffff22; box-shadow: 0 4px 0 #6a4fc4; }
+.cauldron { filter: drop-shadow(0 0 22px #7dffb0); }
+.slot, .ing, .chip { border-color: #a98bff; backdrop-filter: blur(6px); }
+.plot { background: linear-gradient(#5b3fb5 55%, #8a5a3c 55%); box-shadow: 0 5px 0 #2a1668, 0 0 14px #a98bff55; }
+.plot.ready, .plot.fruit { box-shadow: 0 5px 0 #2a1668, 0 0 22px #ffe27a; }
+.bar { height: 14px; border-radius: 99px; background: #ffffff22; overflow: hidden; margin: 10px 8px; }
+.bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #7ff0d0, #ffe27a, #ff8fd1); transition: width .8s; }
+.hero { position: relative; display: grid; place-items: center; margin-top: 6px; }
+.hero-glow { position: absolute; width: 85%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(#ff8fd188, transparent 65%); animation: glow 3s ease-in-out infinite; z-index: -1; }
+@keyframes glow { 50% { transform: scale(1.12); opacity: .7; } }
+.hero-art { width: min(72vw, 290px); cursor: pointer; }
+.hero-art.hop .cr { animation: hop .6s; }
+@keyframes hop { 40% { transform: translateY(-26px) scale(.95, 1.08); } 70% { transform: scale(1.1, .9); } }
+.hero-art.sil .cr, .sil .cr { filter: brightness(0) opacity(.35); }
+.cr { width: 100%; height: 100%; overflow: visible; animation: idle 3s ease-in-out infinite; }
+@keyframes idle { 50% { transform: translateY(-4px) scale(1.03, .98); } }
+.blink { transform-box: fill-box; transform-origin: center; animation: blink 4.5s infinite; }
+@keyframes blink { 95%, 100% { transform: scaleY(.1); } }
+.tw { animation: tw 1.4s infinite alternate; } .t2 { animation-delay: .7s; }
+.aura { animation: glow 2.4s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+.wing { transform-box: fill-box; transform-origin: right center; animation: flap 1.6s ease-in-out infinite; }
+@keyframes flap { 50% { transform: rotate(-8deg); } }
+.card { color: #fff; background: linear-gradient(165deg, #3d2490, #2e1b6b); }
+.card .face { height: 96px; display: grid; place-items: center; }
+.card .face svg { width: 92px; height: 92px; }
+.card.r5 { animation: shine 2.4s ease-in-out infinite alternate; }
+@keyframes shine { to { box-shadow: 0 5px 0 var(--c), 0 0 26px #ffe27a; } }
+.card.locked { filter: none; opacity: .6; --c: #5a4a9a; }
+.modal-body { background: linear-gradient(#3d2490, #2e1b6b); color: #fff; border: 2px solid #a98bff; }
+.modal-body .big { width: 190px; height: 190px; margin: 0 auto; animation: hatch .9s cubic-bezier(.2, 1.6, .4, 1); font-size: 0; }
+@keyframes hatch { from { transform: scale(0) rotate(-40deg); } }
+.nav { background: #1d1250ee; border-top: 1px solid #fff3; backdrop-filter: blur(10px); }
+.nav button { color: #fff; } .nav button.active { background: linear-gradient(#a98bff, #7b5cff); box-shadow: 0 0 14px #a98bff; }

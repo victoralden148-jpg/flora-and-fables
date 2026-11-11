@@ -111,7 +111,7 @@ $('btn-mix').addEventListener('click', () => {
     S.seeds[hit.id] = (S.seeds[hit.id] || 0) + 1;
     const first = !S.known.includes(hit.id);
     if (first) S.known.push(hit.id);
-    $('alchemy-msg').textContent = `✨ ${first ? 'New recipe! ' : ''}You made a ${hit.name} seed.`;
+    SFX.success(); $('alchemy-msg').textContent = `✨ ${first ? 'New recipe! ' : ''}You made a ${hit.name} seed.`;
     save();
   } else {
     // Hint: how close is the best recipe (count of matching ingredients)?
@@ -120,7 +120,7 @@ $('btn-mix').addEventListener('click', () => {
       selected.forEach(i => { const k = pool.indexOf('' + i); if (k > -1) { pool.splice(k, 1); n++; } });
       return n;
     }));
-    $('alchemy-msg').textContent = `💨 Fizzle! Closest recipe shares ${best}/3 ingredients.`;
+    SFX.fail(); $('alchemy-msg').textContent = `💨 Fizzle! Closest recipe shares ${best}/3 ingredients.`;
   }
   selected = []; renderAlchemy();
 });
@@ -159,11 +159,11 @@ $('plots').addEventListener('click', e => {
       `<button class="btn ghost seed-opt" data-plant="${i}:${id}"><span>🌰 ${CHARACTERS[id].name}</span><span>×${S.seeds[id]}</span></button>`).join('') +
       '<button class="btn ghost" data-close>Cancel</button>');
   } else if (p.st === 'seed') {
-    p.st = 'grow'; p.readyAt = Date.now() + GROW_MS; save(); toast('💧 Watered!');
+    p.st = 'grow'; p.readyAt = Date.now() + GROW_MS; save(); SFX.water(); toast('💧 Watered!');
   } else if (p.st === 'grow') {
     toast('Still growing…');
   } else if (p.st === 'ready') {
-    p.st = 'fruit'; save(); toast('Harvested a fruit!');
+    p.st = 'fruit'; save(); SFX.harvest(); toast('Harvested a fruit!');
   } else if (p.st === 'fruit') {
     hatch(i);
   }
@@ -173,8 +173,9 @@ function hatch(i) {
   const p = S.plots[i], ch = CHARACTERS[p.id];
   S.hatched[ch.id] = (S.hatched[ch.id] || 0) + 1;
   const n = S.hatched[ch.id], evolved = n === EVOLVE_AT;
+  (evolved ? SFX.evolve : SFX.hatch)();
   S.plots[i] = { st: 'empty' }; save();
-  openModal(`<div class="big">${evolved ? ch.adult : ch.baby}</div>
+  openModal(`<div class="big">${creature(ch.id, evolved)}</div>
     <h3>${evolved ? ch.name + ' evolved!' : (n === 1 ? 'A new friend hatched!' : ch.name + ' hatched again!')}</h3>
     <p>${ch.name} · ${ELEMENTS[ch.element][0]} ${ch.element}<br>${'★'.repeat(ch.rarity)}</p>
     <p>${ch.lore}</p>
@@ -201,12 +202,12 @@ function renderCards() {
   $('stats').textContent = `${count} / ${CHARACTERS.length}`;
   $('cards').innerHTML = CHARACTERS.map(c => {
     if (!unlocked(c.id)) {
-      return `<div class="card locked"><div class="face">${c.baby}</div><h3>???</h3><div class="meta">${c.biome}</div></div>`;
+      return `<div class="card locked"><div class="face sil">${creature(c.id, false)}</div><h3>???</h3><div class="meta">${c.biome}</div></div>`;
     }
     const [eIcon, color] = ELEMENTS[c.element], adult = isAdult(c.id);
     return `<div class="card r${c.rarity}" style="--c:${color}">
       <span class="el">${eIcon}</span>
-      <div class="face">${adult ? c.adult : c.baby}</div>
+      <div class="face">${creature(c.id, adult)}</div>
       <div class="stars">${'★'.repeat(c.rarity)}</div>
       <h3>${c.name}</h3>
       <div class="meta">${c.element} · ${c.biome}</div>
@@ -217,7 +218,17 @@ function renderCards() {
 }
 
 /* ---------- Render all ---------- */
-function renderAll() { renderAlchemy(); renderFarm(); renderCards(); }
+function renderHome() {
+  const un = CHARACTERS.filter(c => unlocked(c.id)), best = un.slice().sort((a, b) => b.rarity - a.rarity)[0];
+  const ch = best || CHARACTERS[0];
+  $('hero-art').innerHTML = creature(ch.id, best ? isAdult(ch.id) : false);
+  $('hero-art').classList.toggle('sil', !best);
+  $('hero-name').textContent = best ? `${ch.name} ${'★'.repeat(ch.rarity)}` : 'A mystery friend awaits';
+  $('bar-fill').style.width = (un.length / CHARACTERS.length * 100) + '%';
+  $('home-msg').textContent = best ? `${un.length}/24 friends found. Keep brewing!` : 'Brew your first seed in the cauldron.';
+}
+$('hero-art').addEventListener('click', () => { const h = $('hero-art'); SFX.success(); h.classList.remove('hop'); void h.offsetWidth; h.classList.add('hop'); });
+function renderAll() { renderHome(); renderAlchemy(); renderFarm(); renderCards(); }
 setInterval(() => { if ($('page-farm').classList.contains('active')) renderFarm(); }, 1000);
 
 /* ---------- Developer cheat code ---------- */
@@ -235,7 +246,7 @@ $('logo').addEventListener('click', () => {
       S.seeds[c.id] = Math.max(S.seeds[c.id] || 0, 1);              // seed in inventory
       if (!S.known.includes(c.id)) S.known.push(c.id);
     });
-    save(); renderAll(); toast('🌟 God mode: all 24 adults unlocked!');
+    save(); renderAll(); SFX.evolve(); toast('🌟 God mode: all 24 adults unlocked!');
   } else if (code !== null) toast('Invalid code.');
 });
 
