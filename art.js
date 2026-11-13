@@ -1,154 +1,192 @@
-// --- ART.JS: 3D Engine & Character Factory ---
+// --- ART.JS: 3D Engine, Lighting & Custom Models ---
 
 const canvas = document.getElementById('game-canvas');
 const scene = new THREE.Scene();
-scene.background = new THREE.Color('#E0F7FA'); // Langit pastel
-scene.fog = new THREE.FogExp2('#E0F7FA', 0.02);
+// Background sky pastel ala PuffPals
+scene.background = new THREE.Color('#A8E6CF'); 
+scene.fog = new THREE.FogExp2('#A8E6CF', 0.015);
 
-// Kamera Isometrik
+// Kamera
 const aspect = window.innerWidth / window.innerHeight;
-const frustumSize = 10;
+const frustumSize = 12;
 const camera = new THREE.OrthographicCamera(
     frustumSize * aspect / -2, frustumSize * aspect / 2,
     frustumSize / 2, frustumSize / -2,
     0.1, 1000
 );
-camera.position.set(10, 10, 10);
-camera.lookAt(0, 0, 0);
+// Sudut pandang isometrik manis
+camera.position.set(15, 15, 15);
+camera.lookAt(0, 1, 0);
 
-// Renderer dengan Antialias & Shadow
+// Renderer dengan Bayangan Lembut (Soft Shadows)
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Bayangan lembut
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-// --- PENCAHAYAAN (Kunci Grafik Bagus) ---
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+// --- PENCAHAYAAN (Lighting) ---
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
 
-const dirLight = new THREE.DirectionalLight(0xfff5e6, 0.8);
+// Cahaya Matahari (Warm)
+const dirLight = new THREE.DirectionalLight(0xfff5e6, 1.2);
 dirLight.position.set(10, 20, 10);
 dirLight.castShadow = true;
-dirLight.shadow.mapSize.width = 1024;
-dirLight.shadow.mapSize.height = 1024;
-dirLight.shadow.camera.left = -10;
-dirLight.shadow.camera.right = 10;
-dirLight.shadow.camera.top = 10;
-dirLight.shadow.camera.bottom = -10;
+dirLight.shadow.mapSize.width = 2048;
+dirLight.shadow.mapSize.height = 2048;
+dirLight.shadow.camera.left = -15;
+dirLight.shadow.camera.right = 15;
+dirLight.shadow.camera.top = 15;
+dirLight.shadow.camera.bottom = -15;
+dirLight.shadow.bias = -0.0005;
 scene.add(dirLight);
 
-// Cahaya ambient warna-warni untuk *bounce light* (estetik)
-const bounceLight = new THREE.HemisphereLight(0xA8E6CF, 0xFFD3B6, 0.5);
+// Cahaya Langit (Mint & Peach Bounce Light)
+const bounceLight = new THREE.HemisphereLight(0xA8E6CF, 0xFFD3B6, 0.8);
 scene.add(bounceLight);
 
-// Material dasar untuk 3D clay/plastik mengkilap
+// Material Dasar (Tekstur Tanah Liat/Clay)
 const matteMaterial = (color) => new THREE.MeshStandardMaterial({
     color: color,
-    roughness: 0.4, // Tidak terlalu kasar
-    metalness: 0.1, // Sedikit kilau
+    roughness: 0.6, // Sedikit kasar seperti clay
+    metalness: 0.05,
     flatShading: false
 });
 
-// --- FACTORY FUNCTIONS (Membuat model 3D dari kode) ---
-
-// 1. Membuat Karakter Lucu (Blob/Binatang)
+// --- FACTORY: PEMBUATAN KARAKTER 3D CUSTOM ---
 function createCharacter3D(type, color1, color2) {
     const group = new THREE.Group();
-    
-    // Body (Bulat telur)
-    const bodyGeo = new THREE.SphereGeometry(1, 32, 32);
-    const bodyMat = matteMaterial(color1);
-    const body = new THREE.Mesh(bodyGeo, bodyMat);
-    body.scale.set(1, 1.2, 1);
+    const mainMat = matteMaterial(color1);
+    const secMat = matteMaterial(color2);
+    const blackMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.2 });
+    const pinkMat = new THREE.MeshStandardMaterial({ color: 0xFF9A9E, roughness: 0.5 });
+
+    // 1. Badan (Bulat Telur)
+    const body = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), mainMat);
+    body.scale.set(1, 1.1, 0.9);
     body.position.y = 1;
     body.castShadow = true;
     body.receiveShadow = true;
     group.add(body);
 
-    // Kepala (Bulat)
-    const headGeo = new THREE.SphereGeometry(0.8, 32, 32);
-    const headMat = matteMaterial(color1);
-    const head = new THREE.Mesh(headGeo, headMat);
+    // 2. Kepala
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.85, 32, 32), mainMat);
     head.position.y = 2.2;
     head.castShadow = true;
     group.add(head);
 
-    // Mata
-    const eyeGeo = new THREE.SphereGeometry(0.1, 16, 16);
-    const eyeMat = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.1 });
-    
-    const leftEye = new THREE.Mesh(eyeGeo, eyeMat);
-    leftEye.position.set(-0.3, 2.3, 0.7);
+    // 3. Mata (Lebih detail)
+    const eyeGeo = new THREE.SphereGeometry(0.12, 16, 16);
+    const leftEye = new THREE.Mesh(eyeGeo, blackMat);
+    leftEye.position.set(-0.3, 2.3, 0.75);
     group.add(leftEye);
-    
-    const rightEye = new THREE.Mesh(eyeGeo, eyeMat);
-    rightEye.position.set(0.3, 2.3, 0.7);
+    const rightEye = new THREE.Mesh(eyeGeo, blackMat);
+    rightEye.position.set(0.3, 2.3, 0.75);
     group.add(rightEye);
 
-    // Telinga / Tanduk (Custom berdasarkan tipe)
+    // 4. Pipi Merona (Blush)
+    const blushGeo = new THREE.SphereGeometry(0.1, 16, 16);
+    const leftBlush = new THREE.Mesh(blushGeo, pinkMat);
+    leftBlush.position.set(-0.5, 2.15, 0.7);
+    leftBlush.scale.set(1.5, 0.8, 0.5);
+    group.add(leftBlush);
+    const rightBlush = new THREE.Mesh(blushGeo, pinkMat);
+    rightBlush.position.set(0.5, 2.15, 0.7);
+    rightBlush.scale.set(1.5, 0.8, 0.5);
+    group.add(rightBlush);
+
+    // 5. Telinga / Tanduk
     if (type === 'bunny') {
-        const earGeo = new THREE.CapsuleGeometry(0.2, 0.8, 4, 16);
-        const leftEar = new THREE.Mesh(earGeo, matteMaterial(color2));
-        leftEar.position.set(-0.3, 3.1, 0);
-        leftEar.rotation.z = 0.2;
-        leftEar.castShadow = true;
-        group.add(leftEar);
-        
-        const rightEar = new THREE.Mesh(earGeo, matteMaterial(color2));
-        rightEar.position.set(0.3, 3.1, 0);
-        rightEar.rotation.z = -0.2;
-        rightEar.castShadow = true;
-        group.add(rightEar);
+        const earGeo = new THREE.CapsuleGeometry(0.2, 0.9, 8, 16);
+        const lEar = new THREE.Mesh(earGeo, secMat);
+        lEar.position.set(-0.3, 3.2, 0); lEar.rotation.z = 0.2; lEar.castShadow = true;
+        group.add(lEar);
+        const rEar = new THREE.Mesh(earGeo, secMat);
+        rEar.position.set(0.3, 3.2, 0); rEar.rotation.z = -0.2; rEar.castShadow = true;
+        group.add(rEar);
     } else if (type === 'cat') {
-        const earGeo = new THREE.ConeGeometry(0.3, 0.5, 16);
-        const leftEar = new THREE.Mesh(earGeo, matteMaterial(color2));
-        leftEar.position.set(-0.5, 2.9, 0);
-        leftEar.rotation.z = 0.3;
-        leftEar.castShadow = true;
-        group.add(leftEar);
-        
-        const rightEar = new THREE.Mesh(earGeo, matteMaterial(color2));
-        rightEar.position.set(0.5, 2.9, 0);
-        rightEar.rotation.z = -0.3;
-        rightEar.castShadow = true;
-        group.add(rightEar);
+        const earGeo = new THREE.ConeGeometry(0.35, 0.6, 16);
+        const lEar = new THREE.Mesh(earGeo, secMat);
+        lEar.position.set(-0.5, 2.9, 0); lEar.rotation.z = 0.4; lEar.castShadow = true;
+        group.add(lEar);
+        const rEar = new THREE.Mesh(earGeo, secMat);
+        rEar.position.set(0.5, 2.9, 0); rEar.rotation.z = -0.4; rEar.castShadow = true;
+        group.add(rEar);
     } else if (type === 'frog') {
-         // Mata kodok di atas kepala
-         leftEye.position.set(-0.4, 2.8, 0.4);
-         rightEye.position.set(0.4, 2.8, 0.4);
-         leftEye.scale.set(2,2,2);
-         rightEye.scale.set(2,2,2);
+        leftEye.scale.set(1.5, 1.5, 1.5); rightEye.scale.set(1.5, 1.5, 1.5);
+        leftEye.position.set(-0.4, 2.8, 0.5); rightEye.position.set(0.4, 2.8, 0.5);
     }
 
-    // Kaki kecil
-    const legGeo = new THREE.SphereGeometry(0.3, 16, 16);
-    const legMat = matteMaterial(color2);
-    const leftLeg = new THREE.Mesh(legGeo, legMat);
-    leftLeg.position.set(-0.5, 0.2, 0);
-    leftLeg.castShadow = true;
-    group.add(leftLeg);
+    // 6. Tangan & Kaki
+    const limbGeo = new THREE.SphereGeometry(0.25, 16, 16);
+    const lArm = new THREE.Mesh(limbGeo, mainMat); lArm.position.set(-0.9, 1.2, 0.3); lArm.castShadow = true; group.add(lArm);
+    const rArm = new THREE.Mesh(limbGeo, mainMat); rArm.position.set(0.9, 1.2, 0.3); rArm.castShadow = true; group.add(rArm);
     
-    const rightLeg = new THREE.Mesh(legGeo, legMat);
-    rightLeg.position.set(0.5, 0.2, 0);
-    rightLeg.castShadow = true;
-    group.add(rightLeg);
+    const footGeo = new THREE.SphereGeometry(0.35, 16, 16);
+    const lFoot = new THREE.Mesh(footGeo, secMat); lFoot.position.set(-0.4, 0.2, 0.4); lFoot.scale.set(1, 0.7, 1.2); lFoot.castShadow = true; group.add(lFoot);
+    const rFoot = new THREE.Mesh(footGeo, secMat); rFoot.position.set(0.4, 0.2, 0.4); rFoot.scale.set(1, 0.7, 1.2); rFoot.castShadow = true; group.add(rFoot);
 
     return group;
 }
 
-// Animasi melayang (bobbing)
-function animateFloating(obj, time) {
-    obj.position.y += Math.sin(time * 0.002) * 0.002;
+// --- FACTORY: PEMBUATAN LINGKUNGAN (Pohon, Batu, Rumput) ---
+function createTree(x, z, scale = 1) {
+    const treeGroup = new THREE.Group();
+    
+    // Batang
+    const trunkMat = matteMaterial('#C4A484');
+    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.3, 2, 8), trunkMat);
+    trunk.position.y = 1;
+    trunk.castShadow = true;
+    treeGroup.add(trunk);
+
+    // Daun (Kumpulan bola-bola hijau)
+    const leafMat = matteMaterial('#7CCCA6');
+    const leafGeo = new THREE.IcosahedronGeometry(1, 1); // Bentuk sedikit kasar agar natural
+    
+    const leaf1 = new THREE.Mesh(leafGeo, leafMat);
+    leaf1.position.set(0, 2.2, 0); leaf1.scale.set(1.2, 1, 1.2); leaf1.castShadow = true;
+    treeGroup.add(leaf1);
+    
+    const leaf2 = new THREE.Mesh(leafGeo, leafMat);
+    leaf2.position.set(0.6, 1.8, 0.5); leaf2.scale.set(0.8, 0.8, 0.8); leaf2.castShadow = true;
+    treeGroup.add(leaf2);
+
+    const leaf3 = new THREE.Mesh(leafGeo, leafMat);
+    leaf3.position.set(-0.6, 1.8, -0.5); leaf3.scale.set(0.8, 0.8, 0.8); leaf3.castShadow = true;
+    treeGroup.add(leaf3);
+
+    treeGroup.position.set(x, 0, z);
+    treeGroup.scale.set(scale, scale, scale);
+    return treeGroup;
 }
 
-// Handle Resize
-window.addEventListener('resize', () => {
-    const aspect = window.innerWidth / window.innerHeight;
-    camera.left = -frustumSize * aspect / 2;
-    camera.right = frustumSize * aspect / 2;
-    camera.top = frustumSize / 2;
-    camera.bottom = -frustumSize / 2;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-});
+function createRock(x, z) {
+    const rockMat = matteMaterial('#B0B0B0');
+    const rockGeo = new THREE.DodecahedronGeometry(0.5, 0);
+    const rock = new THREE.Mesh(rockGeo, rockMat);
+    rock.position.set(x, 0.2, z);
+    rock.scale.set(1, 0.7, 1);
+    rock.rotation.set(Math.random(), Math.random(), Math.random());
+    rock.castShadow = true;
+    rock.receiveShadow = true;
+    return rock;
+}
+
+function createFlower(x, z, color) {
+    const group = new THREE.Group();
+    const stemMat = matteMaterial('#7CCCA6');
+    const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.3), stemMat);
+    stem.position.y = 0.15;
+    group.add(stem);
+    
+    const petalMat = matteMaterial(color);
+    const petal = new THREE.Mesh(new THREE.SphereGeometry(0.1, 8, 8), petalMat);
+    petal.position.y = 0.3;
+    petal.scale.set(1.5, 0.5, 1.5);
+    group.add(petal);
+
+    group.position.set(x, 0, z);
+    return group;
+}
