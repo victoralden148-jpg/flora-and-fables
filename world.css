@@ -6,67 +6,64 @@
     --peach: #FFD3B6;
     --peach-dark: #F2B999;
     --text-dark: #2c3e50;
-    --bg-glass: rgba(255, 255, 255, 0.9);
+    --bg-glass: rgba(255, 255, 255, 0.95);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; user-select: none; -webkit-tap-highlight-color: transparent; }
 
-body { background: #A8E6CF; overflow: hidden; height: 100vh; color: var(--text-dark); }
+body { background: #B2EBF2; overflow: hidden; height: 100vh; color: var(--text-dark); }
 
 #game-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 
 #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; display: flex; flex-direction: column; pointer-events: none; }
-header, main, nav, .interactive { pointer-events: auto; }
+header, main, nav { pointer-events: auto; }
 
 header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
-#game-logo { font-size: 1.6rem; font-weight: 900; color: #fff; text-shadow: 2px 2px 0px var(--peach-dark); cursor: pointer; letter-spacing: 1px; }
+#game-logo { font-size: 1.6rem; font-weight: 900; color: #fff; text-shadow: 2px 2px 0px var(--peach-dark); cursor: pointer; }
 
 .currency { display: flex; gap: 10px; }
-.stat-pill { background: var(--bg-glass); padding: 8px 16px; border-radius: 20px; font-weight: 900; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); backdrop-filter: blur(10px); }
-/* Ikon Custom CSS pengganti emoji */
-.icon-seed { width: 12px; height: 12px; background: var(--mint-dark); border-radius: 50% 0 50% 50%; transform: rotate(45deg); display: inline-block; }
-.icon-fruit { width: 14px; height: 14px; background: #FF9A9E; border-radius: 50%; display: inline-block; box-shadow: inset -2px -2px 0px rgba(0,0,0,0.1); }
+.stat-pill { background: var(--bg-glass); padding: 8px 16px; border-radius: 20px; font-weight: 900; box-shadow: 0 4px 10px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 8px; }
+/* Ikon pengganti emoji */
+.dot-seed { width: 12px; height: 12px; background: #7CCCA6; border-radius: 50%; box-shadow: inset -2px -2px 0 rgba(0,0,0,0.2); }
+.dot-fruit { width: 12px; height: 12px; background: #FF9A9E; border-radius: 50%; box-shadow: inset -2px -2px 0 rgba(0,0,0,0.2); }
 
-main { flex: 1; position: relative; padding: 0 20px; overflow-y: auto; pointer-events: none; }
-.view { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; pointer-events: auto; }
+main { flex: 1; position: relative; padding: 0 20px; overflow-y: auto; }
+.view { display: none; width: 100%; height: 100%; flex-direction: column; align-items: center; }
 .view.active { display: flex; animation: fadeIn 0.4s ease; }
 
-.title-3d { font-size: 2.2rem; color: #fff; text-shadow: 3px 3px 0px var(--mint-dark), 0px 10px 20px rgba(0,0,0,0.2); margin-top: 10px; text-align: center; }
-.subtitle { background: var(--bg-glass); padding: 8px 20px; border-radius: 20px; font-size: 0.85rem; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-weight: 700; text-align: center; }
+.title-3d { font-size: 2rem; color: #fff; text-shadow: 3px 3px 0px var(--mint-dark); margin-top: 10px; }
+.subtitle { background: var(--bg-glass); padding: 8px 20px; border-radius: 20px; font-size: 0.85rem; margin-bottom: 20px; font-weight: 700; }
 
-/* UI Alchemy */
-#ingredients-container { position: absolute; bottom: 110px; display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; width: 100%; }
-.ing-btn { width: 65px; height: 65px; border-radius: 50%; border: 3px solid #fff; background: var(--bg-glass); box-shadow: 0 8px 15px rgba(0,0,0,0.15); cursor: pointer; transition: 0.2s; font-size: 0.75rem; font-weight: 900; color: var(--text-dark); display: flex; justify-content: center; align-items: center; text-align: center; padding: 5px; backdrop-filter: blur(5px); }
+/* Alchemy */
+#ingredients-container { position: absolute; bottom: 120px; display: flex; gap: 10px; justify-content: center; width: 100%; flex-wrap: wrap; padding: 0 10px; }
+.ing-btn { width: 60px; height: 60px; border-radius: 50%; border: 3px solid #fff; background: var(--bg-glass); box-shadow: 0 4px 10px rgba(0,0,0,0.15); cursor: pointer; font-size: 0.7rem; font-weight: 900; color: var(--text-dark); display: flex; justify-content: center; align-items: center; text-align: center; }
 .ing-btn.selected { transform: scale(0.85); background: var(--mint); border-color: var(--mint-dark); }
 
-.primary-btn { position: absolute; bottom: 30px; width: 80%; max-width: 300px; padding: 18px; border-radius: 30px; border: none; background: linear-gradient(180deg, var(--peach), var(--peach-dark)); color: #fff; font-weight: 900; font-size: 1.2rem; box-shadow: 0 8px 20px rgba(255, 154, 158, 0.5); cursor: pointer; transition: transform 0.1s; letter-spacing: 1px; }
-.primary-btn:active { transform: scale(0.95); }
-.primary-btn:disabled { background: #ccc; box-shadow: none; cursor: not-allowed; }
+.primary-btn { position: absolute; bottom: 30px; width: 80%; max-width: 300px; padding: 18px; border-radius: 30px; border: none; background: var(--peach); color: #fff; font-weight: 900; font-size: 1.1rem; box-shadow: 0 6px 0 var(--peach-dark); }
+.primary-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--peach-dark); }
+.primary-btn:disabled { background: #ccc; box-shadow: 0 6px 0 #999; }
 
-/* UI Farm (Click Zones) */
-#farm-click-zones { position: absolute; top: 20%; width: 100%; height: 60%; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding: 20px; opacity: 0; }
+/* Farm */
+#farm-click-zones { position: absolute; top: 15%; width: 90%; height: 60%; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; opacity: 0; pointer-events: auto; }
 .plot-zone { border-radius: 20px; cursor: pointer; }
 
-/* UI Collection */
+/* Collection */
 #collection-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%; padding-bottom: 100px; }
-.gacha-card { background: var(--bg-glass); border-radius: 20px; padding: 15px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 3px solid #fff; backdrop-filter: blur(10px); position: relative; overflow: hidden; transition: transform 0.2s; }
-.gacha-card:active { transform: scale(0.95); }
+.gacha-card { background: var(--bg-glass); border-radius: 20px; padding: 15px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border: 3px solid #fff; }
 .gacha-card.locked { filter: grayscale(1) opacity(0.5); }
-.gacha-card .rarity { font-size: 0.9rem; color: #FFD700; margin-bottom: 5px; text-shadow: 1px 1px 0 #000; }
-.gacha-card .name { font-weight: 900; font-size: 1.1rem; color: var(--text-dark); }
-.gacha-card .element { font-size: 0.75rem; background: var(--mint); color: var(--text-dark); padding: 3px 10px; border-radius: 10px; display: inline-block; margin-top: 5px; font-weight: bold; }
-.gacha-card .lore { font-size: 0.7rem; font-style: italic; margin-top: 10px; color: #666; line-height: 1.3; }
+.gacha-card .name { font-weight: 900; font-size: 1rem; }
+.gacha-card .element { font-size: 0.75rem; background: var(--mint); padding: 3px 10px; border-radius: 10px; display: inline-block; margin-top: 5px; font-weight: bold; }
 
-/* Navigasi Bawah */
-#bottom-nav { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--bg-glass); backdrop-filter: blur(20px); border-top-left-radius: 35px; border-top-right-radius: 35px; display: flex; justify-content: space-around; padding: 20px 10px 30px 10px; box-shadow: 0 -10px 30px rgba(0,0,0,0.1); }
-.nav-btn { background: none; border: none; color: #999; font-weight: 900; font-size: 0.8rem; transition: 0.3s; letter-spacing: 1px; }
-.nav-btn.active { color: var(--peach-dark); transform: translateY(-5px); text-shadow: 0 2px 5px rgba(242, 185, 153, 0.5); }
+/* Nav */
+#bottom-nav { position: absolute; bottom: 0; left: 0; width: 100%; background: var(--bg-glass); border-top-left-radius: 30px; border-top-right-radius: 30px; display: flex; justify-content: space-around; padding: 20px 10px 30px 10px; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); }
+.nav-btn { background: none; border: none; color: #999; font-weight: 900; font-size: 0.8rem; }
+.nav-btn.active { color: var(--peach-dark); }
 
 /* Modal */
-#modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(8px); z-index: 10; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; }
+#modal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 10; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: 0.3s; }
 #modal-overlay.show { opacity: 1; pointer-events: auto; }
-#modal-content { background: #fff; width: 85%; max-width: 350px; border-radius: 30px; padding: 30px 20px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.3); transform: scale(0.8); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+#modal-content { background: #fff; width: 85%; max-width: 350px; border-radius: 30px; padding: 30px 20px; text-align: center; transform: scale(0.8); transition: 0.3s; }
 #modal-overlay.show #modal-content { transform: scale(1); }
 
 .hidden { display: none !important; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
