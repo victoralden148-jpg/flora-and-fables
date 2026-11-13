@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Flora & Fables 3D</title>
     <link rel="stylesheet" href="world.css">
-    <!-- Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
@@ -15,8 +14,8 @@
         <header>
             <h1 id="game-logo">Flora & Fables</h1>
             <div class="currency">
-                <div class="stat-pill"><span class="icon-seed"></span> <span id="seed-count">0</span></div>
-                <div class="stat-pill"><span class="icon-fruit"></span> <span id="fruit-count">0</span></div>
+                <div class="stat-pill">🌱 <span id="seed-count">0</span></div>
+                <div class="stat-pill">🍎 <span id="fruit-count">0</span></div>
             </div>
         </header>
 
@@ -26,9 +25,7 @@
                 <h2 class="title-3d">Alchemy Lab</h2>
                 <p class="subtitle">Pilih 3 bahan untuk meracik benih.</p>
                 
-                <div id="ingredients-container">
-                    <!-- Tombol bahan akan di-generate JS -->
-                </div>
+                <div id="ingredients-container"></div>
                 <button id="brew-btn" class="primary-btn" disabled>RACIK BENIH</button>
             </div>
 
@@ -36,8 +33,6 @@
             <div id="view-farm" class="view">
                 <h2 class="title-3d">Floating Farm</h2>
                 <p class="subtitle">Ketuk tanah untuk menanam & menyiram.</p>
-                
-                <!-- Grid invisible untuk mendeteksi klik pada tanah 3D -->
                 <div id="farm-click-zones">
                     <div class="plot-zone" data-index="0"></div>
                     <div class="plot-zone" data-index="1"></div>
