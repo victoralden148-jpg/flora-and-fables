@@ -1,70 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Flora & Fables 3D</title>
     <link rel="stylesheet" href="world.css">
-    <!-- Import Three.js untuk rendering 3D -->
+    <!-- Three.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-    <!-- Kanvas 3D Utama -->
     <canvas id="game-canvas"></canvas>
 
-    <!-- Overlay UI -->
     <div id="ui-layer">
         <header>
             <h1 id="game-logo">Flora & Fables</h1>
             <div class="currency">
-                <span id="seed-count">🌱 0</span>
-                <span id="fruit-count">🍎 0</span>
+                <div class="stat-pill"><span class="icon-seed"></span> <span id="seed-count">0</span></div>
+                <div class="stat-pill"><span class="icon-fruit"></span> <span id="fruit-count">0</span></div>
             </div>
         </header>
 
         <main id="ui-content">
-            <!-- View Alchemy -->
+            <!-- ALCHEMY VIEW -->
             <div id="view-alchemy" class="view active">
                 <h2 class="title-3d">Alchemy Lab</h2>
-                <p class="subtitle">Sentuh 3 bahan untuk meracik benih 3D.</p>
-                <div id="ingredients-container"></div>
-                <button id="brew-btn" class="primary-btn" disabled>Brew Seed</button>
+                <p class="subtitle">Pilih 3 bahan untuk meracik benih.</p>
+                
+                <div id="ingredients-container">
+                    <!-- Tombol bahan akan di-generate JS -->
+                </div>
+                <button id="brew-btn" class="primary-btn" disabled>RACIK BENIH</button>
             </div>
 
-            <!-- View Farm -->
+            <!-- FARM VIEW -->
             <div id="view-farm" class="view">
                 <h2 class="title-3d">Floating Farm</h2>
-                <p class="subtitle">Tanam dan siram benih Anda.</p>
-                <div id="farm-container"></div>
+                <p class="subtitle">Ketuk tanah untuk menanam & menyiram.</p>
+                
+                <!-- Grid invisible untuk mendeteksi klik pada tanah 3D -->
+                <div id="farm-click-zones">
+                    <div class="plot-zone" data-index="0"></div>
+                    <div class="plot-zone" data-index="1"></div>
+                    <div class="plot-zone" data-index="2"></div>
+                    <div class="plot-zone" data-index="3"></div>
+                    <div class="plot-zone" data-index="4"></div>
+                </div>
             </div>
 
-            <!-- View Collection -->
+            <!-- COLLECTION VIEW -->
             <div id="view-collection" class="view">
-                <h2 class="title-3d">My Collection</h2>
+                <h2 class="title-3d">Collection</h2>
                 <div id="collection-grid"></div>
             </div>
         </main>
 
-        <!-- Navigasi Bawah -->
         <nav id="bottom-nav">
-            <button class="nav-btn active" data-target="view-alchemy">
-                <span class="icon">⚗️</span><span>Alchemy</span>
-            </button>
-            <button class="nav-btn" data-target="view-farm">
-                <span class="icon">🏝️</span><span>Farm</span>
-            </button>
-            <button class="nav-btn" data-target="view-collection">
-                <span class="icon">📖</span><span>Collection</span>
-            </button>
+            <button class="nav-btn active" data-target="view-alchemy">ALCHEMY</button>
+            <button class="nav-btn" data-target="view-farm">FARM</button>
+            <button class="nav-btn" data-target="view-collection">COLLECTION</button>
         </nav>
     </div>
 
-    <!-- Modal Overlay -->
     <div id="modal-overlay" class="hidden">
         <div id="modal-content"></div>
     </div>
 
-    <!-- Scripts -->
     <script src="art.js"></script>
     <script src="art2.js"></script>
     <script src="ui.js"></script>
