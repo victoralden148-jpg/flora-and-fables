@@ -1,59 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#1d1250">
-  <title>Flora &amp; Fables</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="theme.css">
-  <link rel="stylesheet" href="world.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Flora & Fables 3D</title>
+    <link rel="stylesheet" href="world.css">
+    <!-- Import Three.js untuk rendering 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-  <div class="stars"></div>
-  <header class="top">
-    <h1 id="logo">Flora &amp; Fables</h1>
-    <div class="hud"><button id="btn-sound" class="icon" aria-label="Sound">🔊</button><div id="stats" class="pill">0 / 24</div></div>
-  </header>
-  <main>
-    <section id="page-home" class="page active">
-      <div id="stage" class="stage"></div>
-      <div class="switch"><button id="prev" class="icon" aria-label="Previous">‹</button><h2 id="hero-name" class="center"></h2><button id="next" class="icon" aria-label="Next">›</button></div>
-      <div class="bar"><i id="bar-fill"></i></div>
-      <p id="home-msg" class="msg"></p>
-      <div class="row"><button class="btn" data-go="alchemy">Workshop</button><button class="btn" data-go="farm">Farm</button></div>
-      <div id="hero-art" hidden></div>
-    </section>
-    <section id="page-alchemy" class="page">
-      <div class="scene-wrap"><div id="scene"></div><div id="slots" class="slots"></div></div>
-      <div id="ingredients" class="ingredients"></div>
-      <div class="row"><button id="btn-clear" class="btn ghost">Clear</button><button id="btn-mix" class="btn">Mix</button></div>
-      <p id="alchemy-msg" class="msg">Pick 3 potions, then mix.</p>
-      <h2>Recipe book</h2><div id="recipes" class="recipes"></div>
-    </section>
-    <section id="page-farm" class="page">
-      <p class="msg">Tap a plot to plant, tap again to water, then harvest.</p>
-      <div id="plots" class="plots"></div>
-      <h2>Seed bag</h2><div id="seedbag" class="recipes"></div>
-    </section>
-    <section id="page-collection" class="page"><div id="cards" class="cards"></div><div id="col-prog" class="prog"></div></section>
-  </main>
-  <nav class="nav">
-    <button data-page="home" class="active"><span>Home</span></button>
-    <button data-page="alchemy"><span>Workshop</span></button>
-    <button data-page="farm"><span>Farm</span></button>
-    <button data-page="collection"><span>Cards</span></button>
-  </nav>
-  <div id="modal" class="modal hidden"><div id="modal-body" class="modal-body"></div></div>
-  <div id="toast" class="toast"></div>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.js"></script>
-  <script src="supabase-config.js"></script>
-  <script src="cloud.js"></script>
-  <script src="audio.js"></script>
-  <script src="art.js"></script>
-  <script src="art2.js"></script>
-  <script src="app.js"></script>
-  <script src="ui.js"></script>
-  <script>document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => document.querySelector('.nav [data-page="' + b.dataset.go + '"]').click()));</script>
+    <!-- Kanvas 3D Utama -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- Overlay UI -->
+    <div id="ui-layer">
+        <header>
+            <h1 id="game-logo">Flora & Fables</h1>
+            <div class="currency">
+                <span id="seed-count">🌱 0</span>
+                <span id="fruit-count">🍎 0</span>
+            </div>
+        </header>
+
+        <main id="ui-content">
+            <!-- View Alchemy -->
+            <div id="view-alchemy" class="view active">
+                <h2 class="title-3d">Alchemy Lab</h2>
+                <p class="subtitle">Sentuh 3 bahan untuk meracik benih 3D.</p>
+                <div id="ingredients-container"></div>
+                <button id="brew-btn" class="primary-btn" disabled>Brew Seed</button>
+            </div>
+
+            <!-- View Farm -->
+            <div id="view-farm" class="view">
+                <h2 class="title-3d">Floating Farm</h2>
+                <p class="subtitle">Tanam dan siram benih Anda.</p>
+                <div id="farm-container"></div>
+            </div>
+
+            <!-- View Collection -->
+            <div id="view-collection" class="view">
+                <h2 class="title-3d">My Collection</h2>
+                <div id="collection-grid"></div>
+            </div>
+        </main>
+
+        <!-- Navigasi Bawah -->
+        <nav id="bottom-nav">
+            <button class="nav-btn active" data-target="view-alchemy">
+                <span class="icon">⚗️</span><span>Alchemy</span>
+            </button>
+            <button class="nav-btn" data-target="view-farm">
+                <span class="icon">🏝️</span><span>Farm</span>
+            </button>
+            <button class="nav-btn" data-target="view-collection">
+                <span class="icon">📖</span><span>Collection</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div id="modal-overlay" class="hidden">
+        <div id="modal-content"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="art.js"></script>
+    <script src="art2.js"></script>
+    <script src="ui.js"></script>
 </body>
 </html>
